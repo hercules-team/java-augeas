@@ -1,0 +1,35 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" 
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 
+        http://maven.apache.org/xsd/maven-4.0.0.xsd">
+        
+    <modelVersion>4.0.0</modelVersion>
+    
+    <groupId>net.augeas</groupId>
+    <artifactId>augeas</artifactId>
+    <packaging>jar</packaging>
+    <version>@version@</version>
+    <name>Augeas java bindings</name>
+    <description>Java API for the augeas library library</description>
+    <url>http://augeas.net</url>
+    <licenses>
+        <license>
+            <name>LGPLv2.1</name>
+            <url>http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt</url>
+        </license>
+    </licenses>
+    <scm>
+    	<url>Add it here.</url>
+    </scm>
+
+    <dependencies>
+        <dependency>
+          <groupId>net.java.dev.jna</groupId>
+          <artifactId>jna</artifactId>
+          <scope>provided</scope>
+          <version>3.0.9</version>
+        </dependency>
+    </dependencies>
+
+</project>
+

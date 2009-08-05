@@ -1,0 +1,74 @@
+Summary:	Java bindings for the augeas library
+Name:		java-augeas
+Version:	@version@
+Prefix:     augeas
+Release:	1%{?dist}
+License:	LGPLv2+
+BuildArch:  noarch
+Group:		Development/Libraries
+Source:		http://augeas.net/download/java/%{name}-%{version}.tar.gz
+URL:		http://augeas.net/
+BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root
+
+Requires:   jna
+Requires:	augeas >= @augeas.required@
+Requires:	java >= @java.required@
+Requires:	jpackage-utils
+BuildRequires:	ant
+BuildRequires:	jna
+BuildRequires:	java-devel >= @java.required@
+BuildRequires:	jpackage-utils
+BuildRequires:  junit
+BuildRequires:  ant-junit
+
+#
+# the jpackage-utils should provide a %{java_home} macro
+# to select a different Java JVM from the default one use the following
+# rpmbuild --define 'java_home /usr/lib/jvm/your_jvm_of_choice'
+#
+
+%description
+java-augeas is a java bindings onto the augeas configuration API.
+It requires augeas >= @augeas.required@
+
+
+%package	javadoc
+Summary:	Java documentation for %{name}
+Group:		Development/Documentation
+Requires:	%{name} = %{version}-%{release}
+Requires:	jpackage-utils
+
+%description	javadoc
+API documentation for %{name}.
+%prep
+%setup -q
+
+%build
+ant build docs
+
+%install
+rm -fr %{buildroot}
+install -d -m0755 %{buildroot}%{_javadir}
+install -d -m0755 %{buildroot}%{_javadocdir}/%{name}-%{version}
+cp target/%{prefix}-%{version}.jar %{buildroot}%{_javadir}
+%{__ln_s} %{_javadir}/%{prefix}-%{version}.jar %{buildroot}%{_javadir}/%{prefix}.jar 
+cp -r target/javadoc %{buildroot}%{_javadocdir}/%{name}-%{version}
+
+
+
+%clean
+rm -rf %{buildroot}
+
+%files
+%defattr(-,root,root)
+%doc AUTHORS COPYING NEWS README INSTALL
+%{_javadir}/*.jar
+
+%files javadoc
+%defattr(-,root,root)
+%{_javadocdir}/%{name}-%{version}
+
+%changelog
+* Tue Aug 4 2009 Bryan Kearney <bkearney@redhat.com> - 0.0.1-1
+- Initial Packaging
+

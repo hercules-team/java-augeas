@@ -1,0 +1,13 @@
+      This is the java binding to the Augeas library.
+
+To use it, your program needs to access both the java library (.jar file),
+and the JNA library (.jar file)
+
+You must have the augeas.jar file in your classpath.
+By default the installs it to /usr/share/java/augeas-@version@.jar
+
+To run it, first copy the test.java file to writeable directory
+cp /usr/share/doc/augeas-java-devel-@version@/test.java ~
+
+There is full javadoc for the API in /usr/share/javadoc/augeas-@version@/
+

@@ -1,0 +1,23 @@
+The current build procedure is based on ant. You can build
+the code by
+	cd java-augeas
+	ant build
+	
+Type in ant -projecthelp to see all the tasks you can execute
+with the build script.
+
+You will need a Java Development Kit accepting the version 1.6
+of the language since the bindings use enums as well as the new 
+for loop syntax
+
+You can select the Java Development Kit by using the JAVA_HOME 
+environment variable. This can be useful if you have multiple 
+JDK installed or if it is installed in a non standard path.
+
+Please report any compatibility problem to the augeas
+mailing list at:
+https://www.redhat.com/mailman/listinfo/augeas-devel
+
+
+Bryan Kearney
+bkearney@redhat.com
