@@ -81,16 +81,21 @@ public class Augeas {
      * Pointert to he active augeas instance.
      */
     protected AugPointer aug;
-    
+
     /**
      * The augeas library handle
      */
     protected Aug AugLib = Aug.INSTANCE;
-    
+
     /**
      * The result of the last augeas call.
      */
     protected int lastReturn;
+
+    /**
+     * If a invalid augeas call (lastReturn = -1) should result in an exception
+     */
+    protected boolean raiseExceptions = true;
 
     /**
      * Default constructor that defaults to root and no load path
@@ -129,6 +134,20 @@ public class Augeas {
     }
 
     /**
+     * if exceptions should be raised
+     */
+    public boolean getRaiseExceptions() {
+        return raiseExceptions;
+    }
+
+    /**
+     * sets if exceptions should be raised
+     */
+    public void setRaiseExceptions(boolean value) {
+        raiseExceptions = value;
+    }
+
+    /**
      * Clear the PATH, i.e. set the value to null
      * 
      * @return 0 / -1 based on success/fail
@@ -136,15 +155,15 @@ public class Augeas {
     public int clear(String path) {
         return this.set(path, null);
     }
-    
+
     /**
-     * Clear all transforms under <tt>/augeas/load</tt>. If load()
-     * is called right after this, there will be no files
-     * under +/files+
+     * Clear all transforms under <tt>/augeas/load</tt>. If load() is called
+     * right after this, there will be no files under +/files+
+     * 
      * @return 0 / -1 based on success/fail
      */
     public int clearTransforms() {
-        return this.rm("/augeas/load/*") ;
+        return this.rm("/augeas/load/*");
     }
 
     /**
@@ -155,6 +174,7 @@ public class Augeas {
     public int close() {
         if (aug != null) {
             lastReturn = AugLib.aug_close(aug);
+            processLastCall("Close failed");
             aug = null;
         } else {
             lastReturn = 0;
@@ -173,6 +193,7 @@ public class Augeas {
         check();
         IntByReference created = new IntByReference();
         lastReturn = AugLib.aug_defnode(aug, name, expr, value, created);
+        processLastCall("defineNode failed");
         return created.getValue();
     }
 
@@ -186,6 +207,7 @@ public class Augeas {
     public int defineVariable(String name, String expr) {
         check();
         lastReturn = AugLib.aug_defvar(aug, name, expr);
+        processLastCall("defineVariable failed");
         return lastReturn;
     }
 
@@ -197,6 +219,7 @@ public class Augeas {
     public boolean exists(String path) {
         check();
         lastReturn = AugLib.aug_get(aug, path, null);
+        processLastCall("exists failed");
         return lastReturn == 1;
     }
 
@@ -210,6 +233,7 @@ public class Augeas {
         String[] items = new String[1];
         StringArray itemArray = new StringArray(items);
         lastReturn = AugLib.aug_get(aug, path, itemArray);
+        processLastCall("get failed");
         return items[0];
     }
 
@@ -232,6 +256,7 @@ public class Augeas {
         check();
         int intbefore = before ? 1 : 0;
         lastReturn = AugLib.aug_insert(aug, path, label, intbefore);
+        processLastCall("insert failed");
         return lastReturn;
     }
 
@@ -243,6 +268,7 @@ public class Augeas {
     public int load() {
         check();
         lastReturn = AugLib.aug_load(aug);
+        processLastCall("load failed");
         return lastReturn;
     }
 
@@ -256,6 +282,7 @@ public class Augeas {
         check();
         PointerByReference ptrByR = new PointerByReference();
         lastReturn = AugLib.aug_match(aug, path, ptrByR);
+        processLastCall("match failed");
         Pointer ptr = ptrByR.getValue();
         ArrayList<String> list = new ArrayList<String>();
         for (int x = 0; x < lastReturn; x++) {
@@ -276,6 +303,7 @@ public class Augeas {
     public int move(String source, String dest) {
         check();
         lastReturn = AugLib.aug_mv(aug, source, dest);
+        processLastCall("move failed");
         return lastReturn;
     }
 
@@ -295,6 +323,7 @@ public class Augeas {
     public int rm(String path) {
         check();
         lastReturn = AugLib.aug_rm(aug, path);
+        processLastCall("rm failed");
         return lastReturn;
     }
 
@@ -306,6 +335,7 @@ public class Augeas {
     public int save() {
         check();
         lastReturn = AugLib.aug_save(aug);
+        processLastCall("save failed");
         return lastReturn;
     }
 
@@ -318,33 +348,52 @@ public class Augeas {
     public int set(String path, String value) {
         check();
         lastReturn = AugLib.aug_set(aug, path, value);
+        processLastCall("set failed");
         return lastReturn;
     }
-    
+
     /**
      * Add a transform under <tt>/augeas/load</tt>
-     * @param lens the lens to use
-     * @param name a unique name (optional)
-     * @param incl a list of glob patterns to transform
-     * @param excl a list of glob patterns to remove
+     * 
+     * @param lens
+     *            the lens to use
+     * @param name
+     *            a unique name (optional)
+     * @param incl
+     *            a list of glob patterns to transform
+     * @param excl
+     *            a list of glob patterns to remove
      * @return
      */
     public int transform(String lens, String name, List<String> incl, List<String> excl) {
-        check() ;
-        if (lens == null) throw new AugeasException("No Lens specified") ;
-        if (incl == null) throw new AugeasException("No files to include ") ; 
-        if (name == null) name = lens.split("/.")[0].replace("@", "") ;   
-              
-        String xfm = String.format("/augeas/load/%s/", name ) ;
-        this.set(xfm + "lens", lens) ;
+        check();
+        if (lens == null)
+            throw new AugeasException("No Lens specified");
+        if (incl == null)
+            throw new AugeasException("No files to include ");
+        if (name == null)
+            name = lens.split("/.")[0].replace("@", "");
+
+        String xfm = String.format("/augeas/load/%s/", name);
+        this.set(xfm + "lens", lens);
         for (String inc : incl) {
-            this.set(xfm+"incl[last()+1]", inc) ;
+            this.set(xfm + "incl[last()+1]", inc);
         }
         if (excl != null) {
             for (String ex : excl) {
-                this.set(xfm+"excl[last()+1]", ex) ;
+                this.set(xfm + "excl[last()+1]", ex);
             }
-        }        
-        return lastReturn ;
+        }
+        return lastReturn;
+    }
+
+    /**
+     * If the user has opted to throw exceptions on failure, this method will do
+     * so based on a return code of -1
+     */
+    protected void processLastCall(String message) {
+        if (raiseExceptions && lastReturn == -1) {
+            throw new AugeasException(message);
+        }
     }
 }

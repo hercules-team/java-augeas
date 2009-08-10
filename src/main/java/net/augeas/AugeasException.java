@@ -41,5 +41,4 @@ public class AugeasException extends RuntimeException {
     public AugeasException(Throwable cause) {
         super(cause);
     }
-
 }
