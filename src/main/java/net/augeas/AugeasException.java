@@ -26,16 +26,21 @@ package net.augeas;
  */
 public class AugeasException extends RuntimeException {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -8429664126138352800L;
+
     public AugeasException() {
         super();
     }
 
-    public AugeasException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
     public AugeasException(String message) {
         super(message);
+    }
+
+    public AugeasException(String message, Throwable cause) {
+        super(message, cause);
     }
 
     public AugeasException(Throwable cause) {

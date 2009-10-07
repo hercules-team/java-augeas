@@ -32,17 +32,37 @@ import com.sun.jna.ptr.PointerByReference;
  */
 public interface Aug extends Library {
 
-    Aug INSTANCE = (Aug) Native.loadLibrary("augeas", Aug.class) ;
-    AugPointer aug_init(String root, String loadpath, int flags) ;
-    int aug_defvar(AugPointer aug, String name, String expr) ;
-    int aug_defnode(AugPointer aug, String name, String expr, String value, IntByReference created ) ;    
-    int aug_get(AugPointer aug, String path, StringArray value) ;
-    int aug_set(AugPointer aug, String path, String value) ;
-    int aug_insert(AugPointer aug, String path, String label, int before) ;
-    int aug_load(AugPointer aug ) ;
-    int aug_rm(AugPointer aug, String path) ;
-    int aug_mv(AugPointer aug, String src, String dest) ;       
-    int aug_match(AugPointer aug, String path, PointerByReference matches) ; 
-    int aug_save(AugPointer aug) ;
-    int aug_close(AugPointer aug) ;    
+    Aug INSTANCE = (Aug) Native.loadLibrary("augeas", Aug.class);
+
+    int aug_close(AugPointer aug);
+
+    int aug_defnode(AugPointer aug, String name, String expr, String value, IntByReference created);
+
+    int aug_defvar(AugPointer aug, String name, String expr);
+
+    int aug_error(AugPointer aug);
+
+    String aug_error_details(AugPointer aug);
+
+    String aug_error_message(AugPointer aug);
+
+    String aug_error_minor_message(AugPointer aug);
+
+    int aug_get(AugPointer aug, String path, StringArray value);
+
+    AugPointer aug_init(String root, String loadpath, int flags);
+
+    int aug_insert(AugPointer aug, String path, String label, int before);
+
+    int aug_load(AugPointer aug);
+
+    int aug_match(AugPointer aug, String path, PointerByReference matches);
+
+    int aug_mv(AugPointer aug, String src, String dest);
+
+    int aug_rm(AugPointer aug, String path);
+
+    int aug_save(AugPointer aug);
+
+    int aug_set(AugPointer aug, String path, String value);
 }

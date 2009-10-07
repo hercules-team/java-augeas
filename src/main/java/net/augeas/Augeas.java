@@ -134,20 +134,6 @@ public class Augeas {
     }
 
     /**
-     * if exceptions should be raised
-     */
-    public boolean getRaiseExceptions() {
-        return raiseExceptions;
-    }
-
-    /**
-     * sets if exceptions should be raised
-     */
-    public void setRaiseExceptions(boolean value) {
-        raiseExceptions = value;
-    }
-
-    /**
      * Clear the PATH, i.e. set the value to null
      * 
      * @return 0 / -1 based on success/fail
@@ -247,6 +233,13 @@ public class Augeas {
     }
 
     /**
+     * if exceptions should be raised
+     */
+    public boolean getRaiseExceptions() {
+        return raiseExceptions;
+    }
+
+    /**
      * Create a new sibling LABEL for PATH by inserting into the tree just
      * before PATH if BEFORE == 1 or just after PATH if BEFORE == 0.
      * 
@@ -258,6 +251,38 @@ public class Augeas {
         lastReturn = AugLib.aug_insert(aug, path, label, intbefore);
         processLastCall("insert failed");
         return lastReturn;
+    }
+
+    /**
+     * Returns the error code from the last method call
+     */
+    public AugeasErrorCode lastError() {
+        check();
+        return AugeasErrorCode.forValue(AugLib.aug_error(aug));
+    }
+
+    /**
+     * Returns the error details from the last method call
+     */
+    public String lastErrorDetails() {
+        check();
+        return AugLib.aug_error_details(aug);
+    }
+
+    /**
+     * Returns the error message from the last method call
+     */
+    public String lastErrorMessage() {
+        check();
+        return AugLib.aug_error_message(aug);
+    }
+
+    /**
+     * Returns the minor error message from the last method call
+     */
+    public String lastMinorErrorMessage() {
+        check();
+        return AugLib.aug_error_minor_message(aug);
     }
 
     /**
@@ -308,6 +333,16 @@ public class Augeas {
     }
 
     /**
+     * If the user has opted to throw exceptions on failure, this method will do
+     * so based on a return code of -1
+     */
+    protected void processLastCall(String message) {
+        if (raiseExceptions && lastReturn == -1) {
+            throw new AugeasException(message);
+        }
+    }
+
+    /**
      * @see rm
      */
     public int remove(String path) {
@@ -353,6 +388,13 @@ public class Augeas {
     }
 
     /**
+     * sets if exceptions should be raised
+     */
+    public void setRaiseExceptions(boolean value) {
+        raiseExceptions = value;
+    }
+
+    /**
      * Add a transform under <tt>/augeas/load</tt>
      * 
      * @param lens
@@ -385,15 +427,5 @@ public class Augeas {
             }
         }
         return lastReturn;
-    }
-
-    /**
-     * If the user has opted to throw exceptions on failure, this method will do
-     * so based on a return code of -1
-     */
-    protected void processLastCall(String message) {
-        if (raiseExceptions && lastReturn == -1) {
-            throw new AugeasException(message);
-        }
     }
 }
