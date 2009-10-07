@@ -51,7 +51,7 @@ install -d -m0755 %{buildroot}%{_javadir}
 install -d -m0755 %{buildroot}%{_javadocdir}/%{name}-%{version}
 cp -p target/augeas-%{version}.jar %{buildroot}%{_javadir}
 %{__ln_s} %{_javadir}/augeas-%{version}.jar %{buildroot}%{_javadir}/augeas.jar 
-cp -r target/javadoc %{buildroot}%{_javadocdir}/%{name}
+cp -r -p target/javadoc %{buildroot}%{_javadocdir}/%{name}
 
 
 
