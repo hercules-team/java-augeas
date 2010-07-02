@@ -1,7 +1,7 @@
 Summary:    Java bindings for the augeas library
 Name:       java-augeas
 Version:    @version@
-Release:    2%{?dist}
+Release:    1%{?dist}
 License:    LGPLv2+
 BuildArch:  noarch
 Group:      Development/Libraries
@@ -68,6 +68,9 @@ rm -rf %{buildroot}
 %{_javadocdir}/%{name}
 
 %changelog
+* Tue Jul 2 2010 Bryan Kearney <bkearney@redhat.com> - 0.0.2-1
+- Add support for the aug_setm method
+
 * Tue Aug 27 2009 Bryan Kearney <bkearney@redhat.com> - 0.0.1-2
 - Spec review comments from dan@danny.cz.
 
