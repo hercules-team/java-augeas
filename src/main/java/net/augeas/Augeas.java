@@ -388,6 +388,21 @@ public class Augeas {
     }
 
     /**
+     * Set the value of multiple nodes in one operation. Find or create a node
+     * matching SUB by interpreting SUB as a path expression relative to each
+     * node matching BASE. SUB may be NULL, in which case all the nodes
+     * matching BASE will be modified.
+     *
+     * @return number of modified nodes on success, -1 on error
+     */
+    public int setMany(String base, String sub, String value) {
+        check();
+        lastReturn = AugLib.aug_setm(aug, base, sub, value);
+        processLastCall("setMany failed");
+        return lastReturn;
+    }
+
+    /**
      * sets if exceptions should be raised
      */
     public void setRaiseExceptions(boolean value) {

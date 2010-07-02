@@ -14,6 +14,9 @@ public class AugeasTest extends TestCase {
         String node = "/java/test/node";
         assertEquals("set", 0, aug.set(node, "JarJarBinks"));
         assertEquals("Retrieve JarJarBinks", "JarJarBinks", aug.get(node));
+        String nodeBase = "/java/test";
+        String nodeSub = "n*";
+        assertEquals("set", 1, aug.setMany(nodeBase, nodeSub, "JarJarBinks2"));
         List<String> matches = aug.match("/*");
         assertTrue("/augeas", matches.contains("/augeas"));
         assertTrue("/java", matches.contains("/java"));

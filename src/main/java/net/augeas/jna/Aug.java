@@ -65,4 +65,6 @@ public interface Aug extends Library {
     int aug_save(AugPointer aug);
 
     int aug_set(AugPointer aug, String path, String value);
+
+    int aug_setm(AugPointer aug, String base, String sub, String value);
 }
