@@ -28,7 +28,9 @@ public enum AugeasErrorCode {
     PATH_ERROR(3), /* Invalid path expression */
     NO_MATCH(4), /* No match for path expression */
     MANY_MATCHES(5), /* Too many matches for path expression */
-    LENS_SYNTAX_ERROR(6); /* Syntax error in lens file */
+    LENS_SYNTAX_ERROR(6), /* Syntax error in lens file */
+    LENS_LOOKUP_ERROR(7), /* Lens lookup failed */
+    MULTIPLE_TRANSFORMS_ERROR(8); /* Multiple Transforms */
 
     private int intValue;
     private static java.util.HashMap<Integer, AugeasErrorCode> mappings;
