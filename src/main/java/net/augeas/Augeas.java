@@ -443,4 +443,13 @@ public class Augeas {
         }
         return lastReturn;
     }
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#finalize()
+	 */
+	@Override
+	protected void finalize() throws Throwable {
+		this.close();
+		super.finalize();
+	}
 }
