@@ -1,8 +1,8 @@
 package net.augeas;
 
-import java.util.List;
-
 import junit.framework.TestCase;
+
+import java.util.List;
 
 public class AugeasTest extends TestCase {
 
@@ -71,4 +71,38 @@ public class AugeasTest extends TestCase {
             // Good.
         }
     }
+
+    // TODO find some way to make this test more portable!!
+    public void testSpan() {
+        Augeas aug = new Augeas();
+        aug.set("/augeas/span","enable");
+        aug.rm("/files");
+        aug.load();
+
+        SpanResult got = aug.span("/files/etc/passwd[1]");
+        assertEquals("/etc/passwd", got.getFilename());
+        assertEquals(0, got.getValueStart());
+        assertEquals(0, got.getValueEnd());
+        assertEquals(0, got.getSpanStart());
+        assertTrue(got.getSpanEnd() > 0);
+        assertEquals(0, got.getLabelStart());
+        assertEquals(0, got.getLabelEnd());
+    }
+
+    /* test enable span on load */
+    public void testSpanLoad() {
+        Augeas aug = new Augeas(Augeas.AUG_ENABLE_SPAN);
+        SpanResult got = aug.span("/files/etc/passwd[1]");
+        assertEquals("/etc/passwd", got.getFilename());
+    }
+
+    /* test error code in the case span is disabled */
+    public void testSpanError() {
+        Augeas aug = new Augeas();
+        aug.setRaiseExceptions(false);
+        SpanResult span = aug.span("/files/etc/passwd");
+        AugeasErrorCode lastError = aug.lastError();
+        assertEquals(AugeasErrorCode.NO_SPAN, lastError);
+    }
+
 }

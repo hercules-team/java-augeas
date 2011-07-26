@@ -30,7 +30,8 @@ public enum AugeasErrorCode {
     MANY_MATCHES(5), /* Too many matches for path expression */
     LENS_SYNTAX_ERROR(6), /* Syntax error in lens file */
     LENS_LOOKUP_ERROR(7), /* Lens lookup failed */
-    MULTIPLE_TRANSFORMS_ERROR(8); /* Multiple Transforms */
+    MULTIPLE_TRANSFORMS_ERROR(8), /* Multiple Transforms */
+    NO_SPAN(9); /* No span for this node */
 
     private int intValue;
     private static java.util.HashMap<Integer, AugeasErrorCode> mappings;

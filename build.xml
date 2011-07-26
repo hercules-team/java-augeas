@@ -18,6 +18,7 @@
 		<fileset dir="/usr/share/java">
 			<include name="jna.jar"/>
             <include name="junit.jar"/>			
+            <include name="junit4.jar"/>
 		</fileset>		
 		<pathelement location="target/classes"/> 		
 	</path> 	
@@ -57,6 +58,7 @@
 	        <fileset dir="/usr/share/java">
 	            <include name="jna.jar"/>
 	            <include name="junit.jar"/>         
+	            <include name="junit4.jar"/>
 	        </fileset>      
 	        <pathelement location="target/classes"/>
 	        <pathelement location="target/testclasses"/>            

@@ -67,4 +67,9 @@ public interface Aug extends Library {
     int aug_set(AugPointer aug, String path, String value);
 
     int aug_setm(AugPointer aug, String base, String sub, String value);
+
+    int aug_span(AugPointer aug, String path, PointerByReference filename,
+                 IntByReference labelStart, IntByReference labelEnd,
+                 IntByReference valueStart, IntByReference valueEnd,
+                 IntByReference spanStart, IntByReference spanEnd);
 }
