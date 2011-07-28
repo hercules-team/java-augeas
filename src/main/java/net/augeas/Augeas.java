@@ -36,6 +36,12 @@ import com.sun.jna.ptr.PointerByReference;
 
 /**
  * Public Augeas API.
+ *
+ * The constructor for this class allocates and initializes a new Augeas
+ * handle; this handle holds memory that is not garbage collected. To
+ * ensure that using this class does not leak memory, you must call
+ * <tt>close</tt> on it. This is also done from a finalizer, but should be
+ * done as soon as this object is no longer needed.
  */
 public class Augeas {
 
@@ -153,7 +159,12 @@ public class Augeas {
     }
 
     /**
-     * Write all pending changes to disk
+     * Close the underlying Augeas instance.
+     *
+     * After calling this method, you can not perform any more operations
+     * on this object. You must call this method to ensure that the storage
+     * held by the Augeas instance, which is not garbage collected, is
+     * released.
      * 
      * @return -1 on error, 0 on success
      */
